@@ -27,7 +27,6 @@
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script>
     d3.selectAll("p").style("background-color", "red")
-
     d3.select("#p3").style("background-color", "black").style("margin-top", "10px").style("margin-bottom", '20px').style("color", "#fff")
     const textFun = function (d) {
       return d
@@ -75,14 +74,29 @@
 
     //svg
     const svg = d3.select("#container").append("svg")
-    svg.style("border", "1px solid red")
+    const dataSet = [1, 2, 3, 4, 5, 6, 7]
+    const rectHeight = 20
+    const rectWidth = 10
+
+    svg.style("border", "1px solid blue")
+      .style("margin-top", "50px")
       .attr("width", 500)
       .attr("height", 200)
-    d3.select("svg")
-      .append("g")
       .attr("transform", "translate(50,50)")
 
-    svg.
+    svg.selectAll("rect")
+      .data(dataSet)
+      .enter().append("rect")
+      .attr("x", '20')
+      .attr("y", function (d, i) {
+        return i * (rectHeight + 5) + 10
+      })
+      .attr("height", rectHeight)
+      .attr("width", function (d, i) {
+        return d * 50
+      })
+      .attr("fill", "purple")
+
   </script>
 </body>
 
