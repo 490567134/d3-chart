@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<style>
+  p,
+  div {
+    margin: 0;
+    padding: 0;
+  }
+</style>
+
+<body>
+  <div id="div1">
+    <p></p>
+    <p></p>
+    <p id="p3"></p>
+    <p></p>
+    <p></p>
+    <p id="p6"></p>
+  </div>
+  <div id="container"></div>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script>
+    d3.selectAll("p").style("background-color", "red")
+
+    d3.select("#p3").style("background-color", "black").style("margin-top", "10px").style("margin-bottom", '20px').style("color", "#fff")
+    const textFun = function (d) {
+      return d
+    }
+    //数据绑定
+    d3.select("#p3")
+      .selectAll("p")
+      .data([1, 4, 9, 16, 25])
+      .style("font-size", function (d) {
+        return d + 'px'
+      })
+
+    var allp = d3.select("#div1").selectAll("p")
+      .data([1, 2, 3, 4, 5, 6, 7])
+      .text(textFun)
+    allp.enter().append("p").text(function (d) {
+      return d
+    })
+    allp.exit().remove()
+
+    // 设置动画
+    d3.select('body')
+      .selectAll("p")
+      .transition()
+      .duration(1000)
+      .delay(function (d, i) {
+        return i * 1000
+      })
+      .attr("r", function (d) { return Math.sqrt(d * 30); })
+      .style("background-color", "green")
+
+
+    //数组
+    const arr = [4, 1, 2, 3, 5]
+    const lg = (param) => {
+      console.log(param)
+    }
+    lg(d3.extent(arr));
+    lg(d3.scan(arr, function (a, b) {
+      return b - a
+    }));
+    lg(d3.cross([1, 2], ["x", "y"]))
+    lg(d3.cross([1, 2], ["3", "4"], (a, b) => a + b))
+    lg(d3.merge([[{ name: '1', age: 2 }], [{ name: '4', age: 5 }, { name: '4', age: 7 }]]))
+
+    //svg
+    const svg = d3.select("#container").append("svg")
+    svg.style("border", "1px solid red")
+      .attr("width", 500)
+      .attr("height", 200)
+    d3.select("svg")
+      .append("g")
+      .attr("transform", "translate(50,50)")
+
+    svg.
+  </script>
+</body>
+
+</html>
