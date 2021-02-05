@@ -74,28 +74,47 @@
 
     //svg
     const svg = d3.select("#container").append("svg")
-    const dataSet = [1, 2, 3, 4, 5, 6, 7]
+    const dataSet = [1000, 2000, 3000, 4000, 5000]
     const rectHeight = 20
     const rectWidth = 10
+    const makeSvg = (which = linear, scaleOrdinal = scaleOrdinal) => {
+      svg.style("border", "1px solid blue")
+        .style("margin-top", "50px")
+        .attr("width", 500)
+        .attr("height", 200)
+        .attr("transform", "translate(50,50)")
 
-    svg.style("border", "1px solid blue")
-      .style("margin-top", "50px")
-      .attr("width", 500)
-      .attr("height", 200)
-      .attr("transform", "translate(50,50)")
+      svg.selectAll("rect")
+        .data(dataSet)
+        .enter().append("rect")
+        .attr("x", '20')
+        .attr("y", function (d, i) {
+          return i * (rectHeight + 5) + 10
+        })
+        .attr("height", rectHeight)
+        .attr("width", function (d, i) {
+          // return linear(d);   //在这里用比例尺
+          return which(d);
+        })
+        // .attr("fill", "purple")
+        .attr("fill", function (d) {
+          return scaleOrdinal(d)
+        })
+    }
 
-    svg.selectAll("rect")
-      .data(dataSet)
-      .enter().append("rect")
-      .attr("x", '20')
-      .attr("y", function (d, i) {
-        return i * (rectHeight + 5) + 10
-      })
-      .attr("height", rectHeight)
-      .attr("width", function (d, i) {
-        return d * 50
-      })
-      .attr("fill", "purple")
+    //比例尺应用
+    // 线性比例尺
+    var extent = d3.extent(dataSet)
+    const linear = d3.scaleLinear()      //api原来是d3.scale.linear()
+      .domain(extent)
+      .range([50, 250])
+
+
+    // 序数比例尺,定义域和值域不连续
+    const index = [2, 1, 0, 3, 4];
+    const color = ["red", "blue", "green", "yellow", "black"];
+    const ordinal = d3.scaleOrdinal().domain(index).range(color)
+    makeSvg(linear, ordinal)
 
   </script>
 </body>
