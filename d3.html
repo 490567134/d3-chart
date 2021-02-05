@@ -77,7 +77,7 @@
     const dataSet = [1000, 2000, 3000, 4000, 5000]
     const rectHeight = 20
     const rectWidth = 10
-    const makeSvg = (which = linear, scaleOrdinal = scaleOrdinal) => {
+    const makeSvg = (scaleLinear = linear, scaleOrdinal = ordinal) => {
       svg.style("border", "1px solid blue")
         .style("margin-top", "50px")
         .attr("width", 500)
@@ -93,12 +93,10 @@
         })
         .attr("height", rectHeight)
         .attr("width", function (d, i) {
-          // return linear(d);   //在这里用比例尺
-          return which(d);
+          return scaleLinear(d);//在这里用比例尺
         })
-        // .attr("fill", "purple")
         .attr("fill", function (d) {
-          return scaleOrdinal(d)
+          return scaleOrdinal(d)//在这里用比例尺
         })
     }
 
@@ -108,7 +106,6 @@
     const linear = d3.scaleLinear()      //api原来是d3.scale.linear()
       .domain(extent)
       .range([50, 250])
-
 
     // 序数比例尺,定义域和值域不连续
     const index = [2, 1, 0, 3, 4];
