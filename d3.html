@@ -25,6 +25,7 @@
   </div>
   <div id="container"></div>
   <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://d3js.org/d3-axis.v1.min.js"></script>
   <script>
     d3.selectAll("p").style("background-color", "red")
     d3.select("#p3").style("background-color", "black").style("margin-top", "10px").style("margin-bottom", '20px').style("color", "#fff")
@@ -72,47 +73,7 @@
     lg(d3.cross([1, 2], ["3", "4"], (a, b) => a + b))
     lg(d3.merge([[{ name: '1', age: 2 }], [{ name: '4', age: 5 }, { name: '4', age: 7 }]]))
 
-    //svg
-    const svg = d3.select("#container").append("svg")
-    const dataSet = [1000, 2000, 3000, 4000, 5000]
-    const rectHeight = 20
-    const rectWidth = 10
-    const makeSvg = (scaleLinear = linear, scaleOrdinal = ordinal) => {
-      svg.style("border", "1px solid blue")
-        .style("margin-top", "50px")
-        .attr("width", 500)
-        .attr("height", 200)
-        .attr("transform", "translate(50,50)")
-
-      svg.selectAll("rect")
-        .data(dataSet)
-        .enter().append("rect")
-        .attr("x", '20')
-        .attr("y", function (d, i) {
-          return i * (rectHeight + 5) + 10
-        })
-        .attr("height", rectHeight)
-        .attr("width", function (d, i) {
-          return scaleLinear(d);//在这里用比例尺
-        })
-        .attr("fill", function (d) {
-          return scaleOrdinal(d)//在这里用比例尺
-        })
-    }
-
-    //比例尺应用
-    // 线性比例尺
-    var extent = d3.extent(dataSet)
-    const linear = d3.scaleLinear()      //api原来是d3.scale.linear()
-      .domain(extent)
-      .range([50, 250])
-
-    // 序数比例尺,定义域和值域不连续
-    const index = [2, 1, 0, 3, 4];
-    const color = ["red", "blue", "green", "yellow", "black"];
-    const ordinal = d3.scaleOrdinal().domain(index).range(color)
-    makeSvg(linear, ordinal)
-
+    
   </script>
 </body>
 
