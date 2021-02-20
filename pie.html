@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>饼状图</title>
+
+  <script type="text/javascript" src="http://d3js.org/d3.v4.min.js">
+  </script>
+</head>
+
+<body>
+  <svg></svg>
+
+</body>
+<script>
+  const svgWidth = 500
+  const svgHeight = 500
+  const svg = d3.select("svg")
+    .attr('width', svgWidth)
+    .attr('height', svgHeight)
+    .attr('style', 'border:1px solid pink')
+
+  const margs = { top: 30, bottom: 30, left: 30, right: 30 }
+  const g = svg.append("g")
+  // .attr("transform", `translate(${margs.left},${margs.top})`)
+
+  const dataset = [30, 10, 43, 55, 13]   //饼状图所需数据
+
+  // 设置颜色比例尺
+  const colorScale = d3.scaleOrdinal()
+    .domain(d3.range(dataset.length))
+    .range(d3.schemeCategory10)
+
+  // 新建饼图
+  const pie = d3.pie()
+  // 新建弧形生成器
+  const innerRadius = 50
+  const outerRadius = 100
+  const arc_generator = d3.arc()
+    .innerRadius(innerRadius)
+    .outerRadius(outerRadius)
+
+  // 利用饼状图生成器转换数据
+  const pieData = pie(dataset)
+  console.log(pieData);
+  // 开始绘制，老规矩，先为每一个扇形及其对应的文字建立一个分组<g>
+  const gs = g.selectAll("g")
+    .data(pieData)
+    .enter()
+    .append("g")
+    .attr("transform", `translate(${svgWidth / 2},${svgHeight / 2})`)
+
+  // 绘制各个扇形
+  gs
+    .append("path")
+    .attr("d", d => {
+      return arc_generator(d)  //往弧形生成器中注入数据
+    })
+    .attr('fill', (d, i) => {
+      return colorScale(i)
+    })
+
+  gs.append('text')
+    .attr('transform', (d, i) => {
+      return `translate(${arc_generator.centroid(d)})`
+      return `translate(${d.startAngle},0)`
+    })
+    .text(d => {
+      return d.data
+    })
+    .attr('text-anchor', 'middle')
+
+</script>
+
+</html>
