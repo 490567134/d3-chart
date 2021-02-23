@@ -12,29 +12,29 @@
 </head>
 
 <body>
-  <svg width="960" height="600"></svg>
 </body>
 <script>
   //定义边界
-  var marge = { top: 50, bottom: 0, left: 10, right: 0 };
-
-  var svg = d3.select("svg");
-  var width = svg.attr("width");
-  var height = svg.attr("height");
-
-  var g = svg.append("g")
+  const marge = { top: 50, bottom: 0, left: 10, right: 0 };
+  const width = 960
+  const height = 600
+  const svg = d3.select('body')
+    .append('svg')
+    .attr("width", width)
+    .attr("height", height)
+  const g = svg.append("g")
     .attr("transform", "translate(" + marge.top + "," + marge.left + ")");
 
-  var scale = svg.append("g")
+  const scale = svg.append("g")
     .attr("transform", "translate(" + marge.top + "," + marge.left + ")");
   //数据
-  var dataset = {
+  const dataset = {
     name: "中国",
     children: [
       {
         name: "浙江",
         children: [
-          { name: "杭州", value: 100 },
+          { name: "杭州", value: 10000 },
           { name: "宁波", value: 100 },
           { name: "温州", value: 100 },
           { name: "绍兴", value: 100 }
@@ -80,31 +80,31 @@
   };
 
   //创建一个hierarchy layout
-  var hierarchyData = d3.hierarchy(dataset)
-    .sum(function (d) {
-      return d.value;
-    });
+  const hierarchyData = d3.hierarchy(dataset)
+    .sum(d => {
+      return d.vlaue
+    })
 
   //创建一个树状图
-  var tree = d3.tree()
-    .size([width - 400, height - 200])
+  const tree = d3.tree()
+    .size([width - 400, height - 100])
     .separation(function (a, b) {
       return (a.parent == b.parent ? 1 : 2) / a.depth;
     })
 
   //初始化树状图，也就是传入数据,并得到绘制树基本数据
-  var treeData = tree(hierarchyData);
-  console.log(treeData);
+  const treeData = tree(hierarchyData);
+  // console.log(treeData);
   //得到节点
-  var nodes = treeData.descendants();
-  var links = treeData.links();
+  const nodes = treeData.descendants();
+  const links = treeData.links();
 
   //输出节点和边
   console.log(nodes);
   console.log(links);
 
   //创建一个贝塞尔生成曲线生成器
-  var Bézier_curve_generator = d3.linkHorizontal()
+  const Bézier_curve_generator = d3.linkHorizontal()
     .x(function (d) { return d.y; })
     .y(function (d) { return d.x; });
 
@@ -116,8 +116,8 @@
     .enter()
     .append("path")
     .attr("d", function (d) {
-      var start = { x: d.source.x, y: d.source.y };
-      var end = { x: d.target.x, y: d.target.y };
+      const start = { x: d.source.x, y: d.source.y };
+      const end = { x: d.target.x, y: d.target.y };
       return Bézier_curve_generator({ source: start, target: end });
     })
     .attr("fill", "none")
@@ -126,14 +126,14 @@
 
   //绘制节点和文字
   //老规矩，先创建用以绘制每个节点和对应文字的分组<g>
-  var gs = g.append("g")
+  const gs = g.append("g")
     .selectAll("g")
     .data(nodes)
     .enter()
     .append("g")
     .attr("transform", function (d) {
-      var cx = d.x;
-      var cy = d.y;
+      const cx = d.x;
+      const cy = d.y;
       return "translate(" + cy + "," + cx + ")";
     });
   //绘制节点
