@@ -34,7 +34,7 @@
       {
         name: "浙江",
         children: [
-          { name: "杭州", value: 10000 },
+          { name: "杭州", value: 100 },
           { name: "宁波", value: 100 },
           { name: "温州", value: 100 },
           { name: "绍兴", value: 100 }
@@ -88,13 +88,12 @@
   //创建一个树状图
   const tree = d3.tree()
     .size([width - 400, height - 100])
-    .separation(function (a, b) {
+    .separation((a, b) => {
       return (a.parent == b.parent ? 1 : 2) / a.depth;
     })
 
   //初始化树状图，也就是传入数据,并得到绘制树基本数据
   const treeData = tree(hierarchyData);
-  // console.log(treeData);
   //得到节点
   const nodes = treeData.descendants();
   const links = treeData.links();
@@ -104,25 +103,28 @@
   console.log(links);
 
   //创建一个贝塞尔生成曲线生成器
-  const Bézier_curve_generator = d3.linkHorizontal()
-    .x(function (d) { return d.y; })
-    .y(function (d) { return d.x; });
+  const curve_generator = d3.linkHorizontal()
+    .x(d => {
+      return d.y
+    })
+    .y(d => {
+      return d.x
+    })
 
-  //有了节点和边集的数据后，我们就可以开始绘制了，
-  //绘制边
+  //有了节点和边集的数据后，我们就可以开始绘制了，绘制边
   g.append("g")
-    .selectAll("path")
+    .selectAll('path')
     .data(links)
     .enter()
     .append("path")
-    .attr("d", function (d) {
-      const start = { x: d.source.x, y: d.source.y };
-      const end = { x: d.target.x, y: d.target.y };
-      return Bézier_curve_generator({ source: start, target: end });
+    .attr("d", d => {
+      const start = { x: d.source.x, y: d.source.y }
+      const end = { x: d.target.x, y: d.target.y }
+      return curve_generator({ source: start, target: end })
     })
-    .attr("fill", "none")
-    .attr("stroke", "green")
-    .attr("stroke-width", 1);
+    .attr("fill", "none")  //内部不填充颜色
+    .attr("stroke", "green")  //线条颜色
+    .attr("stroke-width", 1); //线条宽度默认是1
 
   //绘制节点和文字
   //老规矩，先创建用以绘制每个节点和对应文字的分组<g>
@@ -131,7 +133,7 @@
     .data(nodes)
     .enter()
     .append("g")
-    .attr("transform", function (d) {
+    .attr("transform", d => {
       const cx = d.x;
       const cy = d.y;
       return "translate(" + cy + "," + cx + ")";
