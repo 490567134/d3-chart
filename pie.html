@@ -26,16 +26,14 @@
     .attr('height', svgHeight)
     .attr('style', 'border:1px solid pink;margin:0 auto;display:block')
   // .attr('translate', `transform(${svgWidth / 2},${svgHeight / 2})`)
-
-  const margs = { top: 30, bottom: 30, left: 30, right: 30 }
   const g = svg.append("g")
 
   const dataset = [30, 10, 43, 55, 13]   //饼状图所需数据
 
   // 设置颜色比例尺
   const colorScale = d3.scaleOrdinal()
-    .domain(d3.range(dataset.length))
-    .range(d3.schemeCategory10)
+    .domain(d3.range(dataset.length))  //[0,1,2,3,4]
+    .range(d3.schemeCategory10)   //["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"]
 
   // 新建饼图
   const pie = d3.pie()
@@ -45,7 +43,6 @@
   const arc_generator = d3.arc()
     .innerRadius(innerRadius)
     .outerRadius(outerRadius)
-
   // 利用饼状图生成器转换数据
   const pieData = pie(dataset)
   // 开始绘制，老规矩，先为每一个扇形及其对应的文字建立一个分组<g>
@@ -54,6 +51,21 @@
     .enter()
     .append("g")
     .attr("transform", `translate(${svgWidth / 2},${svgHeight / 2})`)
+    .on("click", (item, i, a, b) => {
+      console.log('click', item, i, a, b);
+      item.data++
+      return item
+    });
+
+  // 计算某个饼图数据需延时多久执行动画
+  const computeDelay = index => {
+    var delay = 0
+    var time = 1000
+    for (var i = 0; i < index; i++) {
+      delay += dataset[i] / d3.sum(dataset)
+    }
+    return delay * time
+  }
 
   // 绘制各个扇形
   gs
@@ -64,6 +76,20 @@
     .attr('fill', (d, i) => {
       return colorScale(i)
     })
+    .transition()
+    .delay(function (d, i, datas) {
+      return computeDelay(i)
+    })
+    .duration(2000)
+    // .ease("linear")
+    .attrTween('d', function (d) {
+      var i = d3.interpolate(d.startAngle, d.endAngle);
+      return function (t) {
+        d.endAngle = i(t);
+        return arc_generator(d);
+      }
+    })
+
 
   gs.append('text')
     .attr('transform', (d, i) => {
@@ -73,6 +99,7 @@
       return d.data
     })
     .attr('text-anchor', 'middle')
+
 
 
 

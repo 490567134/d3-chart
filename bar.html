@@ -15,18 +15,15 @@
 
 <body>
   <script>
-    const width = 500
-    const height = 500
+    const width = 500, height = 500, rectPadding = 10, rectWidth = 50;
     const dataset = [10, 20, 30, 40, 33, 24, 12, 5]
     const padding = { left: 20, right: 20, top: 20, bottom: 20 }
-    const rectPadding = 10
-    const rectWidth = 50
     const svg = d3
       .select('body')
       .append('svg')
       .attr("width", width)
       .attr("height", height)
-      .attr('style', "border:1px solid red")
+      .attr('style', "border:1px solid purple")
 
     const xScale = d3
       .scaleBand()
